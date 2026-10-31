@@ -101,6 +101,7 @@ A new key needs one there in the same pull request.
 | `wifi_status_color` | bool | The Wi-Fi pill's icon green while the TV is online, white while it is not (`false` by default) |
 | `wifi_status_warnings` | bool | With `wifi_status_color`, the icon orange while connected without internet (a captive portal waiting for its login page) and red while offline, instead of white (`false` by default) |
 | `wifi_icon_only` | bool | config.xml only: the Wi-Fi pill as a round icon, its network name kept as the TalkBack description, while Settings keeps its label (`icon_only_buttons` turns both into icons) |
+| `top_bar_scale_percent` | percent of full size | config.xml only: the top-bar buttons, and the More menu under them, drawn at this percentage of their size, anchored at the bar's outer edge, for a set whose display density makes them large (a 1080p stick at 320 dpi) |
 | `wifi_label_width` | 0 to 300 | With `icon_only_buttons`, keep the network name on the Wi-Fi pill up to this width in dp, cut with an ellipsis; 0 leaves only the icon |
 | `library_button` | bool | The app library as a round button in the top bar, beside Settings; needs `app_library`. Closing the library returns to it |
 | `show_library_pill` | bool | The App library pill after the last Home row (`true` by default); `false` hides it while `library_button` is on, so the top-bar button stays the way in and Down from the last row stays put, as with `app_library` off |

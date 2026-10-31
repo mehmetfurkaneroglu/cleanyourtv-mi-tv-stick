@@ -392,6 +392,8 @@
     <!-- The Wi-Fi pill as a round icon only, its network name kept as the TalkBack description, while Settings keeps
          its label (icon_only_buttons turns both into icons). -->
     <bool name="wifi_icon_only">true</bool>
+    <!-- The top-bar buttons drawn at this percentage of their size, anchored at the bar's outer edge. -->
+    <integer name="top_bar_scale_percent">80</integer>
 
     <!-- Basic motion is on; advanced effects are opt-in in the launcher's own Settings screen. -->
     <bool name="animations">true</bool>

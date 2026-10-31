@@ -858,6 +858,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             wifiIconOnly = true;
             makeIconOnly(btnWifi);
         }
+        // top_bar_scale_percent: the top-bar buttons drawn smaller, anchored at the bar's outer edge, for a
+        // set whose display density makes them large (a 1080p stick at 320 dpi).
+        float topScale = getResources().getInteger(R.integer.top_bar_scale_percent) / 100f;
+        if (topScale != 1f) {
+            View topButtons = findViewById(R.id.topButtons);
+            boolean rtl = getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+            topButtons.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+                v.setPivotX(rtl ? 0 : v.getWidth());
+                v.setPivotY(v.getHeight() / 2f);
+            });
+            topButtons.setScaleX(topScale);
+            topButtons.setScaleY(topScale);
+        }
         iconOnlyVpn = vpnPill && cfg.iconOnlyVpn;
         if (iconOnlyVpn) {
             vpnPlainBackground = btnVpn.getBackground().getConstantState();
