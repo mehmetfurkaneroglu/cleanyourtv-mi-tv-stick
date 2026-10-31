@@ -163,4 +163,6 @@
     <string name="apps_key_home">מסך הבית</string>
     <string name="apps_key_none">לא כלום</string>
     <string name="apps_key_info">כפתור תשע הנקודות בשלט פותח את האפליקציה שבוחרים כאן. בחרו מסך הבית כדי שיחזור לפתוח אותו.</string>
+    <string name="coloured_background">רקע צבעוני</string>
+    <string name="coloured_background_info">פעיל: זוהר בצבע האפליקציה שעליה אתם עומדים ממלא את הרקע. כבו לרקע שחור שנוח יותר לעיניים בלילה.</string>
 </resources>

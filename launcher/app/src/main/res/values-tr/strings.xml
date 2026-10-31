@@ -108,4 +108,6 @@
     <string name="apps_key_home">Ana ekran</string>
     <string name="apps_key_none">Hiçbir şey yapmasın</string>
     <string name="apps_key_info">Kumandadaki 9 kareli tuş, burada seçtiğiniz uygulamayı açar. Yeniden ana ekranı açması için Ana ekran\'ı, hiçbir şey yapmaması için Hiçbir şey yapmasın\'ı seçin.</string>
+    <string name="coloured_background">Renkli arka plan</string>
+    <string name="coloured_background_info">Açık: Üzerinde durduğunuz uygulamanın renginde bir ışık arka plana yayılır. Gece göz almaması için kapatın, arka plan siyah kalır.</string>
 </resources>

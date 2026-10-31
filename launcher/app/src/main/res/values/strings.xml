@@ -170,4 +170,6 @@
     <string name="apps_key_home">Home</string>
     <string name="apps_key_none">Nothing</string>
     <string name="apps_key_info">The 9-dot button on the remote opens the app you pick here. Pick Home to make it open the home screen again, or Nothing to make it do nothing.</string>
+    <string name="coloured_background">Coloured background</string>
+    <string name="coloured_background_info">On: a glow in the colour of the app you are on fills the background. Turn it off for a black background that is easier on the eyes at night.</string>
 </resources>

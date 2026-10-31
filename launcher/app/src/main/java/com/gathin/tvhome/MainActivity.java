@@ -157,6 +157,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** config.xml ambient_glow, overridable by a theme. Off: the glow view is gone and no fade or colour animator
      *  is started for it, so a focus move costs nothing extra on a launcher that runs all day. */
     private boolean ambientGlow;
+    /** ambient_glow as config.xml and the theme set it, before the More menu's plain-background switch. */
+    private boolean ambientGlowConfigured;
+    private static final String PLAIN_BACKGROUND_KEY = "plain_background";
     /** config.xml app_glow: the highlight takes the focused app's colour on every tile. */
     private boolean appGlow;
     /** config.xml glow_style: the shape setAmbient paints the glow mask in. */
@@ -496,7 +499,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // The glow is one bitmap, so its alpha can be applied while drawing it. Otherwise every frame of
         // a fade renders it into a full-screen offscreen buffer first.
         ambient.forceHasOverlappingRendering(false);
-        ambientGlow = cfg.ambientGlow;
+        ambientGlowConfigured = cfg.ambientGlow;
+        ambientGlow = cfg.ambientGlow && !plainBackground();
         appGlow = cfg.appGlow;
         if (!ambientGlow) ambient.setVisibility(View.GONE);
         heroName = findViewById(R.id.heroName);
@@ -3655,12 +3659,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /**
-     * more_menu: the Ad blocker and ADB switches and the Apps-button pick, each with an Info button to its right.
+     * more_menu: the Coloured background, Ad blocker and ADB switches and the Apps-button pick, each with an Info
+     * button to its right.
      */
     private void showMoreMenu() {
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
         LinearLayout rows = panel.findViewById(R.id.rows);
         PopupWindow popup = glassPopup(panel, (int) (260 * density));
+        if (ambientGlowConfigured) {
+            View colour = switchRow(rows, R.drawable.ic_dark_mode, R.string.coloured_background, () -> !plainBackground(),
+                    this::toggleColouredBackground);
+            addWithInfo(rows, colour, popup, () -> showInfo(R.string.coloured_background,
+                    getString(R.string.coloured_background_info)));
+        }
         View dns = switchRow(rows, R.drawable.ic_shield, R.string.dns, () -> DnsSwitch.isOn(this), DnsSwitch::toggle);
         addWithInfo(rows, dns, popup, () -> showInfo(R.string.dns, getString(R.string.dns_info, DnsSwitch.HOST)));
         View adb = switchRow(rows, R.drawable.ic_adb, R.string.adb, () -> AdbSwitch.isOn(this), AdbSwitch::toggle);
@@ -3716,6 +3727,26 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private interface State {
         boolean on();
+    }
+
+    private boolean plainBackground() {
+        return getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE).getBoolean(PLAIN_BACKGROUND_KEY, false);
+    }
+
+    /** The More menu's Coloured background switch: the ambient glow on or off, kept across restarts. */
+    private boolean toggleColouredBackground(Context context) {
+        boolean plain = !plainBackground();
+        getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE).edit().putBoolean(PLAIN_BACKGROUND_KEY, plain).apply();
+        ambientGlow = ambientGlowConfigured && !plain;
+        stopAmbientAnimation();
+        ambient.animate().cancel();
+        if (ambientGlow) {
+            ambient.setAlpha(0f);
+            ambient.setVisibility(View.VISIBLE);
+        } else {
+            ambient.setVisibility(View.GONE);
+        }
+        return true;
     }
 
     /** A menu row that flips a switch with OK and shows On/Off with the green dot; the menu stays open. */
