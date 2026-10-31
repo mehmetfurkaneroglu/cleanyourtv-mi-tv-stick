@@ -903,7 +903,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Hide the glass when focus leaves the tiles.
         getWindow().getDecorView().getViewTreeObserver().addOnGlobalFocusChangeListener((oldF, newF) -> {
             boolean onTile = newF != null && newF.getId() == R.id.card;
-            if (!onTile) hideGlass();
+            if (!onTile) {
+                hideGlass();
+                // The dock app's big name belongs to the dock: on the top bar it named a tile nobody is on.
+                hideHero();
+            }
         });
 
         packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
