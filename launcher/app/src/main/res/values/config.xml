@@ -389,6 +389,10 @@
          shrink to fit from 5 up (about 144dp at 5, 117dp at 6 on a 1080p TV). -->
     <integer name="columns">4</integer>
 
+    <!-- The Wi-Fi pill as a round icon only, its network name kept as the TalkBack description, while Settings keeps
+         its label (icon_only_buttons turns both into icons). -->
+    <bool name="wifi_icon_only">true</bool>
+
     <!-- Basic motion is on; advanced effects are opt-in in the launcher's own Settings screen. -->
     <bool name="animations">true</bool>
     <bool name="advanced_effects">false</bool>

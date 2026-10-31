@@ -854,6 +854,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             makeIconOnly((TextView) btnSettings);
         }
         if (cfg.iconOnlyInputs) makeIconOnly((TextView) btnInputs);
+        if (getResources().getBoolean(R.bool.wifi_icon_only) && !wifiIconOnly) {
+            wifiIconOnly = true;
+            makeIconOnly(btnWifi);
+        }
         iconOnlyVpn = vpnPill && cfg.iconOnlyVpn;
         if (iconOnlyVpn) {
             vpnPlainBackground = btnVpn.getBackground().getConstantState();
