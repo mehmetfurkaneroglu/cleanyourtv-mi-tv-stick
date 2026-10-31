@@ -3655,7 +3655,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     /**
-     * more_menu: the Ad blocker and ADB switches, each with an Info button to its right.
+     * more_menu: the Ad blocker and ADB switches and the Apps-button pick, each with an Info button to its right.
      */
     private void showMoreMenu() {
         View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
@@ -3665,6 +3665,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         addWithInfo(rows, dns, popup, () -> showInfo(R.string.dns, getString(R.string.dns_info, DnsSwitch.HOST)));
         View adb = switchRow(rows, R.drawable.ic_adb, R.string.adb, () -> AdbSwitch.isOn(this), AdbSwitch::toggle);
         addWithInfo(rows, adb, popup, () -> AdbSwitch.showInfo(this));
+        View apps = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        ((ImageView) apps.findViewById(R.id.icon)).setImageResource(R.drawable.ic_apps_pill);
+        ((TextView) apps.findViewById(R.id.title)).setText(R.string.apps_key);
+        setRowStatus(apps, appsKeyLabel(), false);
+        apps.setOnClickListener(v -> {
+            popup.dismiss();
+            root.post(this::pickAppsKey);   // opens its own list once this one has closed
+        });
+        addWithInfo(rows, apps, popup, () -> showInfo(R.string.apps_key, getString(R.string.apps_key_info)));
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max(popup.getWidth(), Math.min(panel.getMeasuredWidth(), (int) (380 * density))));
         dropInScaled(popup, panel, btnMore);
@@ -3749,6 +3758,83 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         status.setVisibility(View.VISIBLE);
         status.setText(text);
         row.findViewById(R.id.dot).setVisibility(dot ? View.VISIBLE : View.GONE);
+    }
+
+    private String appsKeyLabel() {
+        String pkg = AppsKey.app(this);
+        if (AppsKey.NONE.equals(pkg)) return getString(R.string.apps_key_none);
+        if (AppsKey.intent(this, pkg) == null) return getString(R.string.apps_key_home);
+        try {
+            PackageManager pm = getPackageManager();
+            return pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString();
+        } catch (PackageManager.NameNotFoundException e) {
+            return getString(R.string.apps_key_home);
+        }
+    }
+
+    /**
+     * Home, Nothing, then the apps on the TV's launcher list, as a glass dropdown under the More pill that scrolls
+     * once it would run past the screen; apps installed later show up the next time it opens. The pick is what the
+     * remote's Apps button does.
+     */
+    private void pickAppsKey() {
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> found = pm.queryIntentActivities(
+                new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER), 0);
+        List<ResolveInfo> apps = new ArrayList<>();
+        List<String> seen = new ArrayList<>();
+        for (ResolveInfo r : found) {
+            String pkg = r.activityInfo.packageName;
+            if (pkg.equals(getPackageName()) || seen.contains(pkg)) continue;
+            seen.add(pkg);
+            apps.add(r);
+        }
+        apps.sort((a, b) -> a.loadLabel(pm).toString().compareToIgnoreCase(b.loadLabel(pm).toString()));
+        String current = AppsKey.app(this);
+        if (!AppsKey.NONE.equals(current) && AppsKey.intent(this, current) == null) current = "";
+
+        View panel = getLayoutInflater().inflate(R.layout.popup_list, root, false);
+        LinearLayout rows = panel.findViewById(R.id.rows);
+        PopupWindow popup = glassPopup(panel, (int) (260 * density));
+        View selected = pickRow(rows, popup, "", getString(R.string.apps_key_home), getDrawable(R.drawable.ic_home), true, current);
+        View none = pickRow(rows, popup, AppsKey.NONE, getString(R.string.apps_key_none), getDrawable(R.drawable.ic_block), true, current);
+        if (current.equals(AppsKey.NONE)) selected = none;
+        for (ResolveInfo r : apps) {
+            String pkg = r.activityInfo.packageName;
+            View row = pickRow(rows, popup, pkg, r.loadLabel(pm).toString(), r.loadIcon(pm), false, current);
+            if (pkg.equals(current)) selected = row;
+        }
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popup.setWidth(Math.max(popup.getWidth(), Math.min(panel.getMeasuredWidth(), (int) (380 * density))));
+        // Scroll rather than run past the bottom of the screen: the panel is drawn at the top bar's scale.
+        float scale = getResources().getInteger(R.integer.top_bar_scale_percent) / 100f;
+        Rect drawn = new Rect();
+        btnMore.getGlobalVisibleRect(drawn);
+        int room = Math.round((root.getHeight() - drawn.bottom - 40 * density) / scale);
+        if (panel.getMeasuredHeight() > room) {
+            View scroll = panel.findViewById(R.id.scroll);
+            scroll.getLayoutParams().height = room - (int) (12 * density);
+        }
+        dropInScaled(popup, panel, btnMore);
+        selected.requestFocus();
+    }
+
+    /** One row of the Apps-button pick: OK saves it and closes the list; the current pick wears the green dot. */
+    private View pickRow(LinearLayout rows, PopupWindow popup, String pkg, String label, Drawable icon,
+            boolean tinted, String current) {
+        View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        ImageView image = row.findViewById(R.id.icon);
+        if (!tinted) image.setImageTintList(null);
+        image.setImageDrawable(icon);
+        ((TextView) row.findViewById(R.id.title)).setText(label);
+        row.findViewById(R.id.status).setVisibility(View.GONE);
+        row.findViewById(R.id.dot).setVisibility(pkg.equals(current) ? View.VISIBLE : View.GONE);
+        row.setOnClickListener(v -> {
+            AppsKey.set(this, pkg);
+            popup.dismiss();
+        });
+        rows.addView(row);
+        return row;
     }
 
     /** The header opens launcher settings directly; hold OK keeps the extra home actions available. */

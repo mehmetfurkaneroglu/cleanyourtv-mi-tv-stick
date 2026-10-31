@@ -288,7 +288,8 @@ public class HomeKeyService extends AccessibilityService {
             return false;
         }
         if (event.getKeyCode() != KeyEvent.KEYCODE_ALL_APPS) return false;
-        if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) openHome();
+        // The More menu's Apps-key pick opens its app; Home stays the fallback.
+        if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled() && !AppsKey.launch(this)) openHome();
         return true;
     }
 

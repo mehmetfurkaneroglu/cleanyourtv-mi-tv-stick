@@ -159,4 +159,8 @@
     <string name="adb_info_title">חיבור דרך ADB</string>
     <string name="adb_info_text">1. הפעילו כאן את ADB.\n2. חברו את המחשב לאותה רשת.\n3. במחשב: adb connect %1$s:5555\n\nליציאה 5555 אין סיסמה. בסיום כבו את המתג הראשי באפשרויות המפתחים והפעילו מחדש.</string>
     <string name="adb_no_permission">נדרש אישור חד-פעמי דרך ADB: pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="apps_key">כפתור האפליקציות</string>
+    <string name="apps_key_home">מסך הבית</string>
+    <string name="apps_key_none">לא כלום</string>
+    <string name="apps_key_info">כפתור תשע הנקודות בשלט פותח את האפליקציה שבוחרים כאן. בחרו מסך הבית כדי שיחזור לפתוח אותו.</string>
 </resources>

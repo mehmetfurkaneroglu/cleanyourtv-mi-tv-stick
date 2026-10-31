@@ -166,4 +166,8 @@
     <string name="adb_info_title">Connecting over ADB</string>
     <string name="adb_info_text">1. Turn ADB on here.\n2. Put the computer on the same network as the TV.\n3. On the computer: adb connect %1$s:5555\n\nPort 5555 has no password: anyone on your network can reach the TV while it is on. When you are done, turn off the master switch at the top of Developer options and restart the stick.</string>
     <string name="adb_no_permission">Needs a one-time grant over ADB: pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="apps_key">Apps button</string>
+    <string name="apps_key_home">Home</string>
+    <string name="apps_key_none">Nothing</string>
+    <string name="apps_key_info">The 9-dot button on the remote opens the app you pick here. Pick Home to make it open the home screen again, or Nothing to make it do nothing.</string>
 </resources>
