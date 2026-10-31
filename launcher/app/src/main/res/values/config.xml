@@ -394,6 +394,8 @@
     <bool name="wifi_icon_only">true</bool>
     <!-- The top-bar buttons drawn at this percentage of their size, anchored at the bar's outer edge. -->
     <integer name="top_bar_scale_percent">80</integer>
+    <!-- A "More" pill left of Wi-Fi with the switches and picks of its dropdown (MainActivity.showMoreMenu). -->
+    <bool name="more_menu">true</bool>
 
     <!-- Basic motion is on; advanced effects are opt-in in the launcher's own Settings screen. -->
     <bool name="animations">true</bool>

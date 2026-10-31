@@ -97,4 +97,11 @@
     <string name="clock_format_system">Sistem</string>
     <string name="clock_format_12">12 saat</string>
     <string name="clock_format_24">24 saat</string>
+    <string name="more_menu">Daha fazla</string>
+    <string name="dns">Reklam engelleyici</string>
+    <string name="dns_info">Açık: Bütün uygulamalardaki reklam ve takip adresleri AdGuard DNS (%1$s) ile engellenir. YouTube reklamlarını engellemez. Bir uygulama açılmıyor ya da video takılıyorsa buradan kapatıp tekrar deneyin.</string>
+    <string name="adb_info">Bilgi</string>
+    <string name="adb_info_title">ADB ile bağlanma</string>
+    <string name="adb_info_text">1. ADB\'yi buradan açın.\n2. Bilgisayar çubukla aynı ağda olsun.\n3. Bilgisayarda: adb connect %1$s:5555\n\n5555 portunun şifresi yoktur: ADB açıkken ağınızdaki herkes çubuğa bağlanabilir. İşiniz bitince Geliştirici seçeneklerinin en üstündeki ana anahtarı kapatıp çubuğu yeniden başlatın.</string>
+    <string name="adb_no_permission">ADB üzerinden bir kez izin verilmesi gerekiyor: pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS</string>
 </resources>

@@ -3,6 +3,7 @@ package com.gathin.tvhome;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -324,6 +325,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** fill_dock false: how many dock slots held an app when reorder mode started. */
     private int dockedAtStart;
     private View btnReorder;
+    /** more_menu: the More pill left of Wi-Fi, which drops showMoreMenu. */
+    private View btnMore;
     /** dock_apps as loaded (config.xml or a theme): a saved Order only applies while these are unchanged. */
     private List<String> dockApps;
     /** fill_dock false: the dock can have empty slots, which reorder mode leaves out and restores afterwards. */
@@ -807,6 +810,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             else open(systemIntent(Settings.ACTION_SETTINGS));
         });
         btnReorder = findViewById(R.id.btnReorder);
+        btnMore = findViewById(R.id.btnMore);
+        if (getResources().getBoolean(R.bool.more_menu)) {
+            btnMore.setVisibility(View.VISIBLE);
+            btnMore.setOnClickListener(v -> showMoreMenu());
+        }
         btnReorder.setOnClickListener(v -> toggleReorder());
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
         if (!cfg.showNetworkPill) btnWifi.setVisibility(View.GONE);
@@ -904,10 +912,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnVpn.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
         btnReorder.setOnKeyListener(pillKeys);
+        btnMore.setOnKeyListener(pillKeys);
         btnLibraryTop.setOnKeyListener(pillKeys);
         for (View button : topAppButtons) button.setOnKeyListener(pillKeys);
         if (advancedEffects) {
-            List<View> pills = new ArrayList<>(Arrays.asList(btnInputs, btnWifi, btnVpn, btnReorder, btnLibraryTop, btnSettings));
+            List<View> pills = new ArrayList<>(Arrays.asList(btnInputs, btnMore, btnWifi, btnVpn, btnReorder, btnLibraryTop, btnSettings));
             pills.addAll(topAppButtons);
             for (View button : pills) {
                 button.setOnFocusChangeListener((view, focused) -> view.animate()
@@ -3643,6 +3652,103 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         popup.setWidth(Math.max((int) (220 * density), Math.min(panel.getMeasuredWidth(), (int) (360 * density))));
         dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.START : Gravity.END);
         rows.getChildAt(0).requestFocus();
+    }
+
+    /**
+     * more_menu: the Ad blocker and ADB switches, each with an Info button to its right.
+     */
+    private void showMoreMenu() {
+        View panel = getLayoutInflater().inflate(R.layout.popup_inputs, root, false);
+        LinearLayout rows = panel.findViewById(R.id.rows);
+        PopupWindow popup = glassPopup(panel, (int) (260 * density));
+        View dns = switchRow(rows, R.drawable.ic_shield, R.string.dns, () -> DnsSwitch.isOn(this), DnsSwitch::toggle);
+        addWithInfo(rows, dns, popup, () -> showInfo(R.string.dns, getString(R.string.dns_info, DnsSwitch.HOST)));
+        View adb = switchRow(rows, R.drawable.ic_adb, R.string.adb, () -> AdbSwitch.isOn(this), AdbSwitch::toggle);
+        addWithInfo(rows, adb, popup, () -> AdbSwitch.showInfo(this));
+        panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        popup.setWidth(Math.max(popup.getWidth(), Math.min(panel.getMeasuredWidth(), (int) (380 * density))));
+        dropInScaled(popup, panel, btnMore);
+        rows.getChildAt(0).requestFocus();
+    }
+
+    /**
+     * dropIn for a menu under a top_bar_scale_percent pill: the panel is drawn at the bar's scale, centred under the
+     * pill as it is drawn, not as it is laid out, and kept on screen. The window keeps the full size; the rest stays
+     * clear.
+     */
+    private void dropInScaled(PopupWindow popup, View panel, View anchor) {
+        float scale = getResources().getInteger(R.integer.top_bar_scale_percent) / 100f;
+        if (scale == 1f) {
+            dropIn(popup, panel, anchor, getResources().getBoolean(R.bool.rtl_menu_bar) ? Gravity.START : Gravity.END);
+            return;
+        }
+        Rect drawn = new Rect();
+        anchor.getGlobalVisibleRect(drawn);
+        panel.setPivotX(0);
+        panel.setPivotY(0);
+        panel.setScaleX(scale);
+        panel.setScaleY(scale);
+        panel.setAlpha(0f);
+        panel.setTranslationY(-8 * density);
+        int drawnWidth = Math.round(popup.getWidth() * scale);
+        int margin = Math.round(24 * density);
+        int x = Math.max(margin, Math.min(drawn.centerX() - drawnWidth / 2, root.getWidth() - margin - drawnWidth));
+        // The full-size window may run past the screen edge where only its clear part lies; don't let Android
+        // shift it back, which would move the drawn panel off the pill.
+        popup.setClippingEnabled(false);
+        popup.showAtLocation(root, Gravity.TOP | Gravity.START, x, drawn.bottom + (int) (8 * density));
+        panel.animate().alpha(1f).translationY(0f).setDuration(reducedMotion ? Motion.REDUCED_MS : 200)
+                .setInterpolator(new android.view.animation.DecelerateInterpolator(1.6f)).start();
+    }
+
+    private interface Toggle {
+        boolean flip(Context context);
+    }
+
+    private interface State {
+        boolean on();
+    }
+
+    /** A menu row that flips a switch with OK and shows On/Off with the green dot; the menu stays open. */
+    private View switchRow(LinearLayout rows, int icon, int title, State state, Toggle toggle) {
+        View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
+        ((ImageView) row.findViewById(R.id.icon)).setImageResource(icon);
+        ((TextView) row.findViewById(R.id.title)).setText(title);
+        Runnable show = () -> setRowStatus(row, getString(state.on() ? R.string.on : R.string.off), state.on());
+        show.run();
+        row.setOnClickListener(v -> {
+            if (toggle.flip(this)) show.run();
+        });
+        return row;
+    }
+
+    /** Adds a dropdown row with an Info button to its right (Right moves to it); Info closes the menu first. */
+    private void addWithInfo(LinearLayout rows, View row, PopupWindow popup, Runnable info) {
+        LinearLayout line = new LinearLayout(this);
+        line.setOrientation(LinearLayout.HORIZONTAL);
+        line.addView(row, new LinearLayout.LayoutParams(0, row.getLayoutParams().height, 1f));
+        ImageView button = (ImageView) getLayoutInflater().inflate(R.layout.item_icon_button, line, false);
+        button.setImageResource(R.drawable.ic_info);
+        button.setContentDescription(getString(R.string.adb_info));
+        button.setOnClickListener(v -> {
+            popup.dismiss();
+            info.run();
+        });
+        line.addView(button);
+        rows.addView(line);
+    }
+
+    private void showInfo(int title, CharSequence message) {
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+                .setPositiveButton(android.R.string.ok, null).show();
+    }
+
+    /** A dropdown row's right-hand text, with the green dot for a switch that is on. */
+    private static void setRowStatus(View row, CharSequence text, boolean dot) {
+        TextView status = row.findViewById(R.id.status);
+        status.setVisibility(View.VISIBLE);
+        status.setText(text);
+        row.findViewById(R.id.dot).setVisibility(dot ? View.VISIBLE : View.GONE);
     }
 
     /** The header opens launcher settings directly; hold OK keeps the extra home actions available. */

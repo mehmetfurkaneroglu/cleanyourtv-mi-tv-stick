@@ -152,4 +152,11 @@
     <string name="clock_format_system">מערכת</string>
     <string name="clock_format_12">12 שעות</string>
     <string name="clock_format_24">24 שעות</string>
+    <string name="more_menu">עוד</string>
+    <string name="dns">חוסם פרסומות</string>
+    <string name="dns_info">פעיל: פרסומות ומעקב נחסמים בכל האפליקציות דרך AdGuard DNS (%1$s). לא חוסם פרסומות ב-YouTube. אם אפליקציה לא נפתחת או וידאו נתקע, כבו כאן ונסו שוב.</string>
+    <string name="adb_info">מידע</string>
+    <string name="adb_info_title">חיבור דרך ADB</string>
+    <string name="adb_info_text">1. הפעילו כאן את ADB.\n2. חברו את המחשב לאותה רשת.\n3. במחשב: adb connect %1$s:5555\n\nליציאה 5555 אין סיסמה. בסיום כבו את המתג הראשי באפשרויות המפתחים והפעילו מחדש.</string>
+    <string name="adb_no_permission">נדרש אישור חד-פעמי דרך ADB: pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS</string>
 </resources>

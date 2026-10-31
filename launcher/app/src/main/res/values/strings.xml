@@ -158,4 +158,12 @@
     <string name="clock_format_system">System</string>
     <string name="clock_format_12">12-hour</string>
     <string name="clock_format_24">24-hour</string>
+    <string name="more_menu">More</string>
+    <string name="adb" translatable="false">ADB</string>
+    <string name="dns">Ad blocker</string>
+    <string name="dns_info">On: ads and trackers are blocked for every app through AdGuard DNS (%1$s). It does not block YouTube ads. If an app will not open or a video stalls, turn it off here and try again.</string>
+    <string name="adb_info">Info</string>
+    <string name="adb_info_title">Connecting over ADB</string>
+    <string name="adb_info_text">1. Turn ADB on here.\n2. Put the computer on the same network as the TV.\n3. On the computer: adb connect %1$s:5555\n\nPort 5555 has no password: anyone on your network can reach the TV while it is on. When you are done, turn off the master switch at the top of Developer options and restart the stick.</string>
+    <string name="adb_no_permission">Needs a one-time grant over ADB: pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS</string>
 </resources>
