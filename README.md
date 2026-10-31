@@ -1,3 +1,25 @@
+# CleanYourTV – Xiaomi Mi TV Stick fork
+
+> **⚠️ Sorumluluk reddi:** Bu rehberi uygularken cihazını bozan, kuramayan ya da veri kaybı yaşayan kişilerden
+> sorumluluk kabul etmiyoruz; her adım kendi riskinizdedir. Resmî değildir, Xiaomi veya Google ile ilgisi yoktur.
+> *Disclaimer: we take no responsibility for anyone who cannot complete these steps or damages their device.*
+
+Bu depo, [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv) projesinin **Xiaomi Mi TV Stick
+(MiTV-AESP0, Android TV 9)** için hazırlanmış bir **fork**'udur: reklam satırları ve izleme takibi kapatılır, yerine
+sade bir ana ekran ve **Daha fazla** menüsü (renkli arka plan, reklam engelleyici, ADB, kumandanın 9 kareli tuşu
+için uygulama seçimi) gelir. Hiçbir şey silinmez, her adım geri alınabilir.
+
+![Mi TV Stick ana ekranı](examples/xiaomi-mi-tv-stick-tr/screenshots/home.jpg)
+
+**➡️ Adım adım kurulum (geliştirici seçeneklerini açmaktan ADB'yi kapatmaya kadar):
+[examples/xiaomi-mi-tv-stick-tr](examples/xiaomi-mi-tv-stick-tr/README.md)**
+
+Dijitsu TV'ler için ayrı fork: [cleanyourtv-dijitsu](https://github.com/mehmetfurkaneroglu/cleanyourtv-dijitsu).
+
+---
+
+*Aşağısı orijinal CleanYourTV README'sidir. / Below is the original CleanYourTV README.*
+
 <p align="center">
   <a href="https://cleanyour.tv/halloween"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner-halloween.png" alt="CleanYourTV, Halloween edition. Your TV, minus the ads. Strip the bloatware from any Android TV or Google TV over Wi-Fi and replace the ad-filled home screen with a clean launcher that looks like an Apple TV. No root, no cable, nothing uninstalled, and a one-line restore. Now with a pumpkin." width="800"></a>
 </p>

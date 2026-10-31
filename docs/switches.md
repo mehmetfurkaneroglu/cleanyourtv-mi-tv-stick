@@ -65,3 +65,7 @@ rule sit on its wanted list until a screenshot arrives.
 | `icon_tiles` | <img src="switches/icon_tiles.jpg" width="320" alt="icon_tiles: an app drawn from its icon in the grid on a TV"> |
 | `game_day` | <img src="switches/game_day.jpg" width="320" alt="game_day: Minnesota Vikings at Detroit Lions, Kickoff in 5d 13h, with four dots, under the clock on a TV"> |
 | `clock_format` | <img src="switches/clock_format.jpg" width="320" alt="clock_format on a TV"> |
+| `wifi_icon_only` | <img src="../examples/xiaomi-mi-tv-stick-tr/screenshots/home.jpg" width="320" alt="wifi_icon_only: the Wi-Fi pill as an icon beside More and Settings on a Mi TV Stick"> |
+| `top_bar_scale_percent` | <img src="../examples/xiaomi-mi-tv-stick-tr/screenshots/more-menu.jpg" width="320" alt="top_bar_scale_percent 80: the top-bar pills and the More menu at 80 percent on a Mi TV Stick"> |
+| `more_menu` | <img src="../examples/xiaomi-mi-tv-stick-tr/screenshots/more-menu.jpg" width="320" alt="more_menu: Coloured background, Ad blocker, ADB and Apps button rows on a Mi TV Stick"> |
+| `apps_key_default` | <img src="../examples/xiaomi-mi-tv-stick-tr/screenshots/apps-key.jpg" width="320" alt="apps_key_default: the Apps button pick with HBO Max selected on a Mi TV Stick"> |
