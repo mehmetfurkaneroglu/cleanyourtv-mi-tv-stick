@@ -1,0 +1,6 @@
+{
+  "tv": "Xiaomi Mi TV Stick (MiTV-AESP0, aquaman, 1 GB), Turkey",
+  "os": "Android TV 9",
+  "brand": "Xiaomi",
+  "notes": "Round button sends HOME, 9-dot button ALL_APPS (an app picked in the More menu); `HOME_KEY_SERVICE=1`; Chromecast and voice kept; only the Developer options master switch closes 5555"
+}

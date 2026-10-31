@@ -1,0 +1,73 @@
+# Xiaomi Mi TV Stick (MiTV-AESP0, codename aquaman), Android TV 9 (SDK 28), firmware PI.2055, Turkey.
+# Stock launcher: com.google.android.tvlauncher (disabled by launcher/build-and-install.sh).
+# Built from examples/xiaomi-mitv-aesp0 on 31 Oct 2026, with the owner's choices: voice search, Chromecast
+# (setupwraith stays on for it), firmware updates and the Mi video player kept; Mi Cast, Play Movies, YouTube Music
+# and the screensavers off. Free memory went from about 175 MB to about 320 MB.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/xiaomi-mi-tv-stick-tr/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/xiaomi-mi-tv-stick-tr/debloat.txt com.google.android.tvlauncher
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Notes from this unit:
+# - The remote (Bluetooth, vendor 2717 product 32b9) sends HOME for the round button and ALL_APPS for the 9-dot
+#   button; HOME_KEY_SERVICE=1 keeps Home working and lets the More menu give the 9-dot button an app.
+# - mitv.service was off on this unit without trouble (global firmware, Settings is com.android.tv.settings), but the
+#   list leaves it on: only examples/xiaomi-mitv-aesp0 disables it, with the China-market warning.
+# - The screensaver setting still names Google's backdrop after it is disabled: also run
+#   `settings put secure screensaver_enabled 0` (undo: 1).
+# - Closing ADB: USB debugging off alone leaves 5555 open; the Developer options master switch and a reboot close it.
+
+# Xiaomi + Google telemetry
+com.miui.tv.analytics
+com.google.android.feedback
+com.google.android.tv.bugreportsender
+tv.alphonso.alphonso_eula                   # Alphonso automatic content recognition (viewing tracking)
+
+# PatchWall, content rows, sponsored rows
+com.mitv.tvhome.atv
+com.mitv.tvhome.michannel
+com.xm.webcontent
+com.google.android.tvrecommendations
+android.autoinstalls.config.xiaomi.mibox3   # Play auto-install of partner apps
+android.autoinstalls.config.xioami.mibox3   # same, misspelled duplicate (sic, "xioami")
+
+# Preloaded apps and Xiaomi services
+com.google.android.play.games
+com.xiaomo.tv.milegal                       # Xiaomi privacy-policy screen (sic, "xiaomo")
+# mitv.service                              # MiTV service framework; off on the author's unit (global firmware, Settings
+#                                             unaffected), left on here: on China-market firmware it breaks Settings, see
+#                                             docs/TROUBLESHOOTING.md#xiaomi-cn-firmware-settings-freezes-or-crashes-after-the-debloat
+com.mitv.download.service                   # PatchWall download service
+com.xiaomi.android.tvsetup.partnercustomizer  # seeds partner apps at setup
+com.mitv.milinkservice                      # Mi Cast receiver; comment out if you cast from a Xiaomi phone
+# com.mitv.videoplayer                      # stock Mi video player, kept
+# com.xiaomi.mitv.updateservice             # firmware updates, kept
+com.google.android.tv                       # Live Channels; the stick has no tuner or HDMI input
+com.google.android.videos                   # Google Play Movies & TV
+com.google.android.youtube.tvmusic          # YouTube Music TV
+# com.google.android.tungsten.setupwraith   # kept: Chromecast needs it
+
+# Setup leftovers, accounts, backup and printing plumbing
+com.google.android.partnersetup
+com.google.android.onetimeinitializer
+com.android.onetimeinitializer
+com.android.providers.contacts
+com.android.providers.calendar
+com.google.android.syncadapters.contacts
+com.google.android.syncadapters.calendar
+com.google.android.backuptransport
+com.android.backupconfirm
+com.android.sharedstoragebackup
+com.android.wallpaperbackup
+com.android.printspooler
+com.android.settings.intelligence
+com.android.se                              # secure element; the stick has no NFC
+com.android.cts.ctsshim                     # CTS test shims
+com.android.cts.priv.ctsshim
+
+# Screensavers
+com.google.android.backdrop
+com.android.dreams.basic
+com.mitv.dream
+
+# Kept: voice search (katniss, pumpkin), text-to-speech, TalkBack, the phone-remote service, Bluetooth pairing.
